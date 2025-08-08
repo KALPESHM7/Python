@@ -72,4 +72,4 @@ Python/
 
 ---
 
-*Make sure to commit and push this README.md to your GitHub repo.*
+
