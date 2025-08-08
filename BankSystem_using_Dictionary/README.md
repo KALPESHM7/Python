@@ -48,11 +48,6 @@ Make sure `pytest` is installed for running tests (if you’ve included test cod
 pip install pytest
 ```
 
-Then, to run tests (assuming they’re extracted to `test_bank_system.py`):
-
-```bash
-pytest test_bank_system.py
-```
 
 ## Project Structure
 
