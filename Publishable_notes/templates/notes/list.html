@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>My Notes {% if show_archived %}(Archived){% endif %}</h2>
+
+<div class="content-section">
+  <form method="post" action="{{ url_for('notes.new_note') }}">
+    <h3>Create Note</h3>
+    <div class="form-group">
+      <label>Title</label>
+      <input name="title" class="form-control" placeholder="Note title">
+    </div>
+    <div class="form-group">
+      <label>Body</label>
+      <textarea name="body" class="form-control" rows="5" placeholder="Write your thoughts..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-outline-info">Create</button>
+    {% if show_archived %}
+      <a class="btn-custom" href="{{ url_for('notes.list_notes') }}">Show Active</a>
+    {% else %}
+      <a class="btn-custom" href="{{ url_for('notes.list_notes', archived=1) }}">Show Archived</a>
+    {% endif %}
+  </form>
+</div>
+
+{% for n in notes %}
+  <article class="content-section">
+    <div class="article-metadata">
+      <small class="text-muted">Updated: {{ n.updated_at.strftime('%Y-%m-%d %H:%M') }}</small>
+      {% if n.post %}
+        <span class="tag">Published</span>
+      {% else %}
+        <span class="tag muted">Draft</span>
+      {% endif %}
+    </div>
+
+    <h3 class="article-title">{{ n.title }}</h3>
+    <p class="article-content">{{ n.body[:300] }}{% if n.body|length > 300 %}...{% endif %}</p>
+
+    <div class="actions">
+      <a class="btn-custom" href="{{ url_for('notes.edit_note', note_id=n.id) }}">Edit</a>
+      <form method="post" action="{{ url_for('notes.toggle_archive', note_id=n.id) }}" style="display:inline">
+        <button class="btn btn-outline-info" type="submit">{{ "Unarchive" if n.is_archived else "Archive" }}</button>
+      </form>
+      <form method="post" action="{{ url_for('notes.delete_note', note_id=n.id) }}" style="display:inline" onsubmit="return confirm('Delete note?');">
+        <button class="btn btn-danger" type="submit">Delete</button>
+      </form>
+      {% if not n.post %}
+        <form method="post" action="{{ url_for('notes.publish_note', note_id=n.id) }}" style="display:inline">
+          <button class="btn btn-success" type="submit">Publish → Post</button>
+        </form>
+      {% else %}
+        <a class="btn btn-outline-info" href="{{ url_for('posts.detail_post', slug=n.post.slug) }}">View Post</a>
+      {% endif %}
+    </div>
+  </article>
+{% else %}
+  <p class="text-muted">No notes yet — create one above.</p>
+{% endfor %}
+{% endblock %}
