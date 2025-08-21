@@ -1,0 +1,35 @@
+:root { --bg:#0f172a; --panel:#111827; --muted:#94a3b8; --text:#e5e7eb; --accent:#22c55e; --warn:#f59e0b; --danger:#ef4444; }
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:#0b1020;color:var(--text)}
+.container{max-width:900px;margin:0 auto;padding:16px}
+header{background:#0d1327;border-bottom:1px solid #1f2937}
+.nav{display:flex;justify-content:space-between;align-items:center}
+.brand{color:#fff;text-decoration:none;font-weight:700}
+nav a{color:#cbd5e1;margin-left:16px;text-decoration:none}
+nav a:hover{color:#fff}
+main{padding:24px 0}
+.card{background:#0f172a;border:1px solid #1f2937;border-radius:12px;padding:16px;margin-bottom:16px}
+input,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #273043;background:#0b1226;color:#e5e7eb;margin-top:6px}
+label{display:block;margin-bottom:12px;font-size:14px}
+button,.btn{cursor:pointer;border:none;border-radius:8px;padding:10px 14px;background:#334155;color:#e5e7eb}
+button:hover,.btn:hover{background:#3b475e}
+.success{background:var(--accent) !important;color:#06260f}
+.danger{background:var(--danger) !important}
+.small{padding:4px 8px;font-size:12px}
+.link{color:#93c5fd;text-decoration:none;margin-left:8px}
+.link:hover{text-decoration:underline}
+.muted{color:var(--muted)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.list{list-style:none;padding:0;margin:0}
+.tag{display:inline-block;padding:4px 8px;border-radius:999px;background:#12213e;color:#9cc1ff;border:1px solid #1f3a76;margin-right:8px}
+.tags .tag{margin-right:6px}
+.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.toolbar{margin:8px 0}
+.flash{list-style:none;padding:0;margin:0 0 16px 0}
+.flash li{padding:10px 12px;border-radius:8px;margin-bottom:8px}
+.flash-success{background:#06260f;color:#bdf7d0;border:1px solid #164b2f}
+.flash-danger{background:#2a0c0c;color:#fecaca;border:1px solid #7f1d1d}
+.flash-warning{background:#331b04;color:#fde68a;border:1px solid #92400e}
+.flash-info{background:#0b2239;color:#bfdbfe;border:1px solid #1e3a8a}
+footer{border-top:1px solid #1f2937;background:#0d1327}
+footer .container{padding:16px}
