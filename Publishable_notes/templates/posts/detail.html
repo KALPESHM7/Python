@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="content-section">
+  {% if edit_mode %}
+    <h2>Edit Post (updates Note)</h2>
+    <form method="post">
+      <div class="form-group">
+        <label>Title</label>
+        <input name="title" class="form-control" value="{{ post.note.title }}">
+      </div>
+      <div class="form-group">
+        <label>Body</label>
+        <textarea name="body" class="form-control" rows="12">{{ post.note.body }}</textarea>
+      </div>
+      <button class="btn btn-outline-info" type="submit">Save</button>
+      <a class="btn-custom" href="{{ url_for('posts.detail_post', slug=post.slug) }}">Cancel</a>
+    </form>
+  {% else %}
+    <div class="article-metadata">
+      {% if post.is_featured %}<span class="tag featured">Featured</span>{% endif %}
+      <small class="text-muted">Published: {{ post.published_at.strftime('%Y-%m-%d') }}</small>
+    </div>
+    <h1 class="article-title">{{ post.note.title }}</h1>
+    <div class="article-content">{{ post.note.body }}</div>
+  {% endif %}
+</article>
+
+{% if current_user.is_authenticated and (current_user.is_admin or current_user.id == post.note.user_id) %}
+<div class="content-section">
+  <h3>Admin/Owner Actions</h3>
+  <form method="post" action="{{ url_for('posts.unpublish', slug=post.slug) }}" onsubmit="return confirm('Unpublish this post?');" style="display:inline">
+    <button class="btn btn-danger" type="submit">Unpublish</button>
+  </form>
+  <form method="post" action="{{ url_for('posts.toggle_feature', slug=post.slug) }}" style="display:inline">
+    <button class="btn btn-outline-info" type="submit">{{ "Unfeature" if post.is_featured else "Feature" }}</button>
+  </form>
+  <a class="btn-custom" href="{{ url_for('posts.edit_post', slug=post.slug) }}">Edit (sync to note)</a>
+
+  <h4>Tags</h4>
+  <form method="post" action="{{ url_for('tags.add_tag', slug=post.slug) }}" class="inline">
+    <input name="tag" class="form-control" placeholder="Add tag (e.g. flask)">
+    <button class="btn btn-outline-info" type="submit">Add</button>
+  </form>
+  {% if post.tags %}
+    <ul class="inline">
+      {% for t in post.tags %}
+        <li>
+          <span class="tag">{{ t.name }}</span>
+          <form method="post" action="{{ url_for('tags.remove_tag', slug=post.slug, tag_id=t.id) }}" style="display:inline">
+            <button class="btn btn-danger btn-xs" type="submit">x</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+{% endif %}
+
+<div class="content-section">
+  <h3>Comments</h3>
+  <form method="post" action="{{ url_for('posts.add_comment', slug=post.slug) }}">
+    <div class="form-group">
+      <label>Your name</label>
+      <input name="author_name" class="form-control" placeholder="Your name">
+    </div>
+    <div class="form-group">
+      <label>Comment</label>
+      <textarea name="text" class="form-control" rows="4" placeholder="Write a comment..."></textarea>
+    </div>
+    <button class="btn btn-outline-info" type="submit">Add Comment</button>
+  </form>
+
+  <ul class="comments">
+    {% for c in post.comments|sort(attribute='created_at', reverse=True) %}
+      <li class="comment">
+        <div class="article-metadata">
+          <strong>{{ c.author_name }}</strong>
+          <small class="text-muted">{{ c.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+        </div>
+        <p class="article-content">{{ c.text }}</p>
+        {% if current_user.is_authenticated and current_user.is_admin %}
+          <form method="post" action="{{ url_for('posts.delete_comment', slug=post.slug, cid=c.id) }}" onsubmit="return confirm('Delete this comment?');">
+            <button class="btn btn-danger btn-xs" type="submit">Delete</button>
+          </form>
+        {% endif %}
+      </li>
+    {% else %}
+      <p class="text-muted">No comments yet.</p>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}
