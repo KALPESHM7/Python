@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="content-section">
+    <h2>500 - Server Error</h2>
+    <p>Oops! Something went wrong on our end.</p>
+    <a href="{{ url_for('web.index') }}" class="btn btn-outline-info">Back to Home</a>
+  </div>
+{% endblock %}

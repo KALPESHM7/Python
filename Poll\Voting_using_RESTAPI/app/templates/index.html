@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+  <h2>Recent Polls</h2>
+  <div class="content-section">
+    {% if polls %}
+      <ul class="list">
+      {% for p in polls %}
+        <li class="mb-4">
+          <!-- Clickable link to the poll voting page -->
+          <a class="article-title" href="{{ url_for('web.poll_public', poll_id=p.id) }}">
+            {{ p.title }}
+          </a>
+          <div class="article-metadata">Created: {{ p.created_at.strftime('%Y-%m-%d') }}</div>
+        </li>
+      {% endfor %}
+      </ul>
+    {% else %}
+      <p class="muted">
+        No polls yet.
+        {% if current_user.is_authenticated %}
+        <a class="btn btn-custom ml-2" href="{{ url_for('web.create_poll') }}">Create your first poll</a>
+        {% else %}
+        <a class="btn btn-custom ml-2" href="{{ url_for('auth.login') }}">Log in to create a poll</a>
+        {% endif %}
+      </p>
+    {% endif %}
+  </div>
+{% endblock %}
