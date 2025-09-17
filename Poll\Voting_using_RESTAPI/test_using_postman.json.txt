@@ -1,0 +1,188 @@
+{
+  "info": {
+    "name": "Voting App API (with Tests)",
+    "_postman_id": "12345-abcde-67890",
+    "description": "Collection for testing Voting App end-to-end with automated tests",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "url": { "raw": "http://127.0.0.1:5000/auth/register", "protocol": "http", "host": ["127.0.0.1"], "port": "5000", "path": ["auth", "register"] },
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "email", "value": "testuser@example.com", "type": "text" },
+            { "key": "password", "value": "Test@1234", "type": "text" },
+            { "key": "confirm_password", "value": "Test@1234", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Registration request worked\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "url": { "raw": "http://127.0.0.1:5000/auth/login", "protocol": "http", "host": ["127.0.0.1"], "port": "5000", "path": ["auth", "login"] },
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "email", "value": "testuser@example.com", "type": "text" },
+            { "key": "password", "value": "Test@1234", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Login request worked\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Login sets a cookie\", function () {",
+              "    pm.expect(pm.cookies.has(\"session\")).to.be.true;",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Poll",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "url": { "raw": "http://127.0.0.1:5000/polls/create", "protocol": "http", "host": ["127.0.0.1"], "port": "5000", "path": ["polls", "create"] },
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "title", "value": "Favorite Language?", "type": "text" },
+            { "key": "options", "value": "Python", "type": "text" },
+            { "key": "options", "value": "JavaScript", "type": "text" },
+            { "key": "options", "value": "C++", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Poll created redirect\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Polls",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "http://127.0.0.1:5000/", "protocol": "http", "host": ["127.0.0.1"], "port": "5000" }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Polls page loaded\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.text()).to.include(\"Recent Polls\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vote on Poll",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "url": { "raw": "http://127.0.0.1:5000/polls/1", "protocol": "http", "host": ["127.0.0.1"], "port": "5000", "path": ["polls", "1"] },
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "option_id", "value": "1", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Vote submitted successfully\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.text()).to.include(\"Thanks for voting\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vote Again (should fail)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/x-www-form-urlencoded" }
+        ],
+        "url": { "raw": "http://127.0.0.1:5000/polls/1", "protocol": "http", "host": ["127.0.0.1"], "port": "5000", "path": ["polls", "1"] },
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            { "key": "option_id", "value": "2", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Double voting prevented\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    pm.expect(pm.response.text()).to.include(\"already voted\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    }
+  ]
+}

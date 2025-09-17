@@ -1,0 +1,11 @@
+flask
+flask_sqlalchemy
+flask_migrate
+flask_login
+flask_wtf
+flask_jwt_extended
+passlib>=1.7.4
+bcrypt<4.0
+pymysql
+python-dotenv
+cryptography
